@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Eventopia Chatbot</title>
+    <!-- Update this script tag -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #chatbox {
+            width: 50%;
+            margin: 0 auto;
+            margin-top: 50px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        #messages {
+            height: 300px;
+            border: 1px solid #ccc;
+            overflow-y: scroll;
+            padding: 10px;
+        }
+        #userInput {
+            width: 80%;
+            padding: 10px;
+        }
+        #sendButton {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="chatbox">
+        <h2>Eventopia Chatbot</h2>
+        <div id="messages"></div>
+        <input id="userInput" type="text" placeholder="Type your message here...">
+        <button id="sendButton">Send</button>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $("#sendButton").on("click", function(){
+                var userMessage = $("#userInput").val();
+                if(userMessage === "") {
+                    alert("Please type a message!");
+                    return;
+                }
+                $("#messages").append("<div><b>You:</b> " + userMessage + "</div>");
+                
+                console.log("Sending message: " + userMessage);
+
+                $.get("/get", { msg: userMessage }, function(response){
+                    console.log("Received response: " + response);
+                    $("#messages").append("<div><b>EventopiaBot:</b> " + response + "</div>");
+                    $("#userInput").val("");  // Clear input after sending
+                }).fail(function(){
+                    alert("Error connecting to the server.");
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
